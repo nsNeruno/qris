@@ -24,7 +24,14 @@ class QRIS {
     data, (position,) => QRISError._(position,),
   ) {
     _rawQrData = data;
-    for (int i = 2; i <= 50; i++) {
+    for (int i = 2; i <= 25; i++) {
+      final key = i.toString().padLeft(2, '0',);
+      final merchantData = _data[key];
+      if (merchantData != null) {
+        _primitivePaymentSystemMerchants[key] = merchantData;
+      }
+    }
+    for (int i = 26; i <= 50; i++) {
       final key = i.toString().padLeft(2, '0',);
       final merchantData = _data[key];
       if (merchantData != null) {
@@ -85,11 +92,52 @@ class QRIS {
       case "11": return QRISInitiationPoint.staticCode;
       case "12": return QRISInitiationPoint.dynamicCode;
     }
+    return null;
   }
+
+  final Map<String, String> _primitivePaymentSystemMerchants = {};
+
+  /// List of merchants associated with Primitive Payment Systems such as
+  /// VISA, MasterCard, Union Pay, etc.
+  ///
+  /// Consisted of Strings referring to the payment identifiers such as the
+  /// number of credit/debit card provided.
+  List<String> get primitivePaymentSystemMerchants => _primitivePaymentSystemMerchants.values.toList(
+    growable: false,
+  );
+
+  List<String> _getPrimitiveMerchantsByRange(int start, int end,) {
+    final merchants = <String>[];
+    for (int i = start; i <= end; i++) {
+      final key = i.toString().padLeft(2, '0',);
+      final merchant = _primitivePaymentSystemMerchants[key];
+      if (merchant != null) {
+        merchants.add(merchant,);
+      }
+    }
+    return List.unmodifiable(merchants,);
+  }
+
+  /// VISA Merchants (ID "02" and "03")
+  List<String> get visaMerchants => _getPrimitiveMerchantsByRange(2, 3,);
+  /// MasterCard Merchants (ID "04" and "05)
+  List<String> get mastercardMerchants => _getPrimitiveMerchantsByRange(4, 5,);
+  /// EMVCo Merchants (ID "06" - "08")
+  List<String> get emvCoMerchants => _getPrimitiveMerchantsByRange(6, 8,);
+  /// Discover Credit Card Merchants (ID "09" and "10")
+  List<String> get discoverMerchants => _getPrimitiveMerchantsByRange(9, 10,);
+  /// AMEX (American Express) Merchants (ID "11" and "12")
+  List<String> get amExMerchants => _getPrimitiveMerchantsByRange(11, 12,);
+  /// JCB (Japan Credit Bureau) Merchants (ID "13" and "14")
+  List<String> get jcbMerchants => _getPrimitiveMerchantsByRange(13, 14,);
+  /// Union Pay Merchants (ID "15" and "16")
+  List<String> get unionPayMerchants => _getPrimitiveMerchantsByRange(15, 16,);
+  /// EMVCo Merchants (ID "17" - "25")
+  List<String> get emvCoMerchants2 => _getPrimitiveMerchantsByRange(17, 25,);
 
   final Map<String, QRISMerchantAccountInformation> _merchants = {};
 
-  /// All available merchants listed on this QRIS Code
+  /// All available non-primitive merchants listed on this QRIS Code
   List<QRISMerchantAccountInformation> get merchants => _merchants.values.toList(
     growable: false,
   );
@@ -105,22 +153,6 @@ class QRIS {
     return List.unmodifiable(merchants,);
   }
 
-  /// VISA Merchants (ID "02" and "03")
-  List<QRISMerchantAccountInformation> get visaMerchants => _getMerchantsByRange(2, 3,);
-  /// MasterCard Merchants (ID "04" and "05)
-  List<QRISMerchantAccountInformation> get mastercardMerchants => _getMerchantsByRange(4, 5,);
-  /// EMVCo Merchants (ID "06" - "08")
-  List<QRISMerchantAccountInformation> get emvCoMerchants => _getMerchantsByRange(6, 8,);
-  /// Discover Credit Card Merchants (ID "09" and "10")
-  List<QRISMerchantAccountInformation> get discoverMerchants => _getMerchantsByRange(9, 10,);
-  /// AMEX (American Express) Merchants (ID "11" and "12")
-  List<QRISMerchantAccountInformation> get amExMerchants => _getMerchantsByRange(11, 12,);
-  /// JCB (Japan Credit Bureau) Merchants (ID "13" and "14")
-  List<QRISMerchantAccountInformation> get jcbMerchants => _getMerchantsByRange(13, 14,);
-  /// Union Pay Merchants (ID "15" and "16")
-  List<QRISMerchantAccountInformation> get unionPayMerchants => _getMerchantsByRange(15, 16,);
-  /// EMVCo Merchants (ID "17" - "25")
-  List<QRISMerchantAccountInformation> get emvCoMerchants2 => _getMerchantsByRange(17, 25,);
   /// Domestic Merchants, most common QRIS Codes are used by domestic merchants (ID "26" - "45")
   List<QRISMerchantAccountInformation> get domesticMerchants => _getMerchantsByRange(26, 45,);
   /// Additional Domestic Merchants information as reserve list, usually empty (ID "46" - "50")
@@ -135,6 +167,7 @@ class QRIS {
     if (data != null) {
       return QRISMerchantAccountDomestic._(data,);
     }
+    return null;
   }
 
   /// Merchant Category Code (MCC in short)
@@ -178,6 +211,7 @@ class QRIS {
     if (data != null) {
       return num.tryParse(data,);
     }
+    return null;
   }
 
   /// This should be a non-null value if [tipIndicator] is [TipIndicator.tipValuePercentage]
@@ -188,6 +222,7 @@ class QRIS {
     if (data != null) {
       return double.tryParse(data,);
     }
+    return null;
   }
 
   /// The country code of the merchant, conforming to ISO 3166-1's Alpha 2 Code.
@@ -218,6 +253,7 @@ class QRIS {
     if (data is String) {
       return QRISMerchantInformationLocalized._(data,);
     }
+    return null;
   }
 
   /// The CRC Checksum of the QRIS Code contents as [int].
@@ -226,6 +262,7 @@ class QRIS {
     if (crc != null) {
       return int.tryParse(crc, radix: 16,);
     }
+    return null;
   }
 
   /// The CRC Checksum of the QRIS Code contents as Hex String
@@ -325,6 +362,7 @@ class QRISMerchantAccountInformation {
         return panCode.substring(0, 8,);
       }
     }
+    return null;
   }
 
   /// The main transaction/payment method.
@@ -524,6 +562,7 @@ class QRISAdditionalData {
     if (data is String) {
       return QRISAdditionalConsumerDataRequest._(data,);
     }
+    return null;
   }
 
   /// Acquirer's use
@@ -532,6 +571,7 @@ class QRISAdditionalData {
     if (data != null) {
       return QRISProprietaryData._(data,);
     }
+    return null;
   }
 }
 

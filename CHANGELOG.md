@@ -1,3 +1,7 @@
+## 0.2.2
+
+* Changed `merchantCriteriaString` to return "URE" to specify Regular Merchants as default value.
+
 ## 0.2.1
 
 * Added getter `merchantCriteriaString` for Merchant Information.

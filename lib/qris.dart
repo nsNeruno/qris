@@ -405,7 +405,7 @@ class QRISMerchantAccountInformation {
     return QRISMerchantCriteria.regular;
   }
 
-  String? get merchantCriteriaString => _data["03"];
+  String get merchantCriteriaString => _data["03"] ?? "URE";
 
   @override
   String toString() {
@@ -467,7 +467,7 @@ class QRISMerchantAccountDomestic {
     return QRISMerchantCriteria.regular;
   }
 
-  String? get merchantCriteriaString => _data["03"];
+  String get merchantCriteriaString => _data["03"] ?? "URE";
 
   @override
   String toString() {

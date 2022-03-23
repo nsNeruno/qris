@@ -404,6 +404,13 @@ class QRISMerchantAccountInformation {
     }
     return QRISMerchantCriteria.regular;
   }
+
+  String? get merchantCriteriaString => _data["03"];
+
+  @override
+  String toString() {
+    return _data.entries.map((e) => "${e.key}: ${e.value}",).join("\n",);
+  }
 }
 
 /// Indicator of the merchant's size/scale.
@@ -458,6 +465,13 @@ class QRISMerchantAccountDomestic {
       case "UBE": return QRISMerchantCriteria.large;
     }
     return QRISMerchantCriteria.regular;
+  }
+
+  String? get merchantCriteriaString => _data["03"];
+
+  @override
+  String toString() {
+    return _data.entries.map((e) => "${e.key}: ${e.value}",).join("\n",);
   }
 }
 

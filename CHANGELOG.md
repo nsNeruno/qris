@@ -1,3 +1,7 @@
+## 0.3.0
+
+* *\[BREAKING\]* Replaced String value of `QRISMerchantAccountDomestic.merchantId` to new type `QRISNationalMerchantIdentifier`
+
 ## 0.2.2
 
 * Changed `merchantCriteriaString` to return "URE" to specify Regular Merchants as default value.

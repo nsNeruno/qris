@@ -1,3 +1,11 @@
+## 0.5.0
+
+* Raised minimum Dart version to `2.18.0`
+* Refactored sections as mixins
+* Reworked parser decoder
+* Added more convenient getters, especially related to `TipIndicator`
+* Updated `README.md`
+
 ## 0.3.0
 
 * *\[BREAKING\]* Replaced String value of `QRISMerchantAccountDomestic.merchantId` to new type `QRISNationalMerchantIdentifier`

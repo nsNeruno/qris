@@ -35,4 +35,13 @@ void main() {
       );
     },
   );
+
+  test(
+    "Test Data Parser #3",
+    () {
+      const qrisData = "00020101021126610016ID.CO.BPDDIY.WWW01189360011200000015850208000015850303UMI520458125303360550203570505.005802ID5913RM SORE MALAM6015JAKARTA SELATAN61051513262070703D0163045C1C";
+      final qris = QRIS(qrisData,);
+      debugPrint(qris.tipIndicator?.toString(),);
+    },
+  );
 }

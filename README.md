@@ -39,9 +39,36 @@ qris.pointOfInitiation?.toString(),
 
 ## Additional information
 
-Will try to document the available fields when I have time. Issue reports are welcome.
+### Reading from Image File/Gallery
+I recommend to try out [barcode_finder](https://pub.dev/packages/barcode_finder). 
+Here's the modified sample usage of that plugin. (The example implements 
+[file_picker](https://pub.dev/packages/file_picker) to pick a file, you may replace it with 
+[image_picker](https://pub.dev/packages/image_picker))
+```dart
+Future<QRIS?> scanFile() async {
+  // Used to pick a file from device storage
+  final pickedFile = await FilePicker.platform.pickFiles();
+  if (pickedFile != null) {
+    final filePath = pickedFile.files.single.path;
+    if (filePath != null) {
+      final scannedData = await BarcodeFinder.scanFile(
+        path: path,
+        formats: [BarcodeFormat.QR_CODE],
+      );
+      if (scannedData != null) {
+        return QRIS(scannedData,);
+      }
+    }
+  }
+  return null;
+}
+```
+
+### Personal Notes
+I documented most of the fields available, but if I miss something, will add in the future. I am 
+also welcome for suggestion regarding documenting the fields.
 
 ## TO-DOs
-- Documenting the available fields
 - Adding more factory constructors/object copy utilities
+- Add a QR Code generator from data
 - Usage guide localized in Bahasa

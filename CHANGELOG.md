@@ -1,3 +1,9 @@
+## 0.5.1
+
+* Fixed wrong `merchantCity` Tag ID (61 -> 60)
+* Raised min Dart SDK to `2.19.3`
+* Raised min Flutter version to `2.5.0`
+
 ## 0.5.0
 
 * Raised minimum Dart version to `2.18.0`

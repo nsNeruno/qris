@@ -177,7 +177,7 @@ class QRIS
 
   /// City name of where the merchant is located, usually presented in UPPER-CASED
   /// String.
-  String? get merchantCity => this[61];
+  String? get merchantCity => this[60];
 
   /// The postal code that corresponds to merchant's location.
   ///

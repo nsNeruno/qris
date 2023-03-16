@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' show StringCharacters;
 import 'package:qris/src/errors.dart';
 
 class QRISDecoder extends Converter<String, Map<int, String>> {

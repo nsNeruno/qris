@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' show StringCharacters;
 import 'package:qris/src/components/merchant_criteria.dart';
 import 'package:qris/src/components/pan_merchant_method.dart';
 import 'package:qris/src/decoder.dart';

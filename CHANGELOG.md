@@ -1,3 +1,7 @@
+## 0.5.1+1
+
+* Added example app
+
 ## 0.5.1
 
 * Fixed wrong `merchantCity` Tag ID (61 -> 60)

@@ -23,8 +23,8 @@ class Merchant
   /// Merchant ID, with length up to 15 characters
   String? get id => this[2];
 
-  /// (Tag 51 only) Merchant ID, with length up to 15 characters, including
-  /// additional information
+  /// (Tag 51 only) Merchant ID, with length between 15-19 characters,
+  /// including additional information
   ///
   /// Falls back to [id] return value on tags 26-45
   late final NationalMerchantIdentifier? nationalMerchantId = () {
@@ -35,6 +35,17 @@ class Merchant
     }
     return null;
   }();
+
+  /// Checks the validity of mPAN sequence
+  ///
+  /// No checks performed on Merchant obtained on sub tag 51
+  @override
+  bool get isValidCheckDigit {
+    if (nationalMerchantId != null) {
+      return true;
+    }
+    return super.isValidCheckDigit;
+  }
 }
 
 /// National Merchant Identifier contained within Entry ID 51 of the QRIS.
@@ -82,6 +93,13 @@ class NationalMerchantIdentifier {
   late final String? generatedYearLastTwoDigits;
 
   late final String? sequenceNumberAndCheckDigit;
+  String? get checkDigit {
+    final s = sequenceNumberAndCheckDigit;
+    if (s?.isNotEmpty ?? false) {
+      return s![s.length - 1];
+    }
+    return null;
+  }
 
   final String _raw;
 }

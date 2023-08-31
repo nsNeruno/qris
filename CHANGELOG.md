@@ -1,3 +1,7 @@
+## 0.6.0
+
+* Exposed Check Digit utilities on Merchant PAN code
+
 ## 0.5.1+1
 
 * Added example app

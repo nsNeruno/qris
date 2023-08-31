@@ -1,15 +1,17 @@
 name: qris
 description: QR Code Indonesian Standard Interpreter.
-version: 0.6.0
+version: 0.6.1
 homepage: https://github.com/nsNeruno/qris
 
 environment:
-  sdk: ">=2.19.4 <=3.0.0"
+  sdk: ">=2.19.4 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:
   flutter:
     sdk: flutter
+
+  crclib: ^3.0.0
 
 dev_dependencies:
   flutter_test:

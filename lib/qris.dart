@@ -5,6 +5,10 @@
 /// scanning.
 library qris;
 
+import 'dart:convert';
+
+import 'package:crclib/catalog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:qris/src/components/additional_data.dart';
 import 'package:qris/src/components/initiation_point.dart';
 import 'package:qris/src/components/merchant.dart';
@@ -199,7 +203,52 @@ class QRIS
   late final int? crc = int.tryParse(this[63] ?? '', radix: 16,);
 
   /// The CRC Checksum of the QRIS Code contents as Hex String
-  String? get crcHex => this["63"];
+  String? get crcHex => this[63];
+
+  /// Recalculate CRC of this QRIS data
+  @visibleForTesting
+  String? get calculatedCRC {
+    final crc = crcHex;
+    if (crc != null) {
+      final raw = toString();
+      final match = RegExp(r'^.+63\d{2}',).firstMatch(raw,)?.group(0,);
+      if (match != null) {
+        final result = Crc16Ibm3740().convert(
+          utf8.encode(match,),
+        );
+        return result.toRadixString(16,);
+      }
+    }
+    return null;
+  }
+
+  /// Check if the CRC assigned to this QRIS is correct
+  bool get isCRCValid {
+    if (crcHex != null) {
+      return crcHex?.toUpperCase() == calculatedCRC?.toUpperCase();
+    }
+    return false;
+  }
+
+  static String? _calculateCRC(String data,) {
+    final match = RegExp(r'^.+63\d{2}',).firstMatch(data,)?.group(0,);
+    if (match != null) {
+      final result = Crc16Ibm3740().convert(
+        utf8.encode(match,),
+      );
+      return result.toRadixString(16,);
+    }
+    return null;
+  }
+
+  /// CRC validation using Isolate
+  Future<bool> get isCRCValidAsync async {
+    final calculated = await compute(_calculateCRC, toString(),);
+    if (calculated != null) {
+      return calculated.toUpperCase() == crcHex?.toUpperCase();
+    }
+    return false;
+  }
 
   List<String> get emvCo {
     return List.generate(

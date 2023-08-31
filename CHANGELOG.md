@@ -1,3 +1,9 @@
+## 0.6.1
+
+* Raised Dart SDK Support to `<4.0.0`
+* Fixed sub tag 63 getter using wrong index
+* Added CRC check utilities
+
 ## 0.6.0
 
 * Exposed Check Digit utilities on Merchant PAN code

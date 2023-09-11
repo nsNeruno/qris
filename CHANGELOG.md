@@ -1,3 +1,9 @@
+## 0.6.3
+
+* Exposed convenient access to `defaultDomesticMerchant`
+* Mod 10 logic fixed for Merchant PAN and exposed as String extension
+* Updated Unit Tests
+
 ## 0.6.1
 
 * Raised Dart SDK Support to `<4.0.0`

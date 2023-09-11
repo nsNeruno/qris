@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import 'package:flutter/widgets.dart';
 import 'package:qris/src/components/merchant.dart';
+import 'package:qris/src/extensions.dart';
 
 /// Represents the Transaction/Payment Method using this QRIS Code
 enum PANMerchantMethod {
@@ -123,21 +123,8 @@ mixin PANCodeMixin on MapBase<int, String> {
     final method = _panMerchantMethod;
     final checkDigit = this.checkDigit;
     if (method != null && merchantSequence != null && checkDigit != null) {
-      final chars = '$method$merchantSequence'.characters;
-      int multiplier = 1;
-      int sum = 0;
-      for (int i = 0; i < chars.length - 1; i++) {
-        int factor = int.parse(
-          chars.elementAt(i,),
-        ) * multiplier;
-        if (factor > 9) {
-          sum += 1 + factor % 10;
-        } else {
-          sum += factor;
-        }
-        multiplier = multiplier == 1 ? 2 : 1;
-      }
-      final calculatedCheckDigit = 10 - (sum % 10);
+      final mod = '$method$merchantSequence'.getMod10();
+      final calculatedCheckDigit = 10 - mod;
       return calculatedCheckDigit == checkDigit;
     }
     return false;

@@ -21,6 +21,7 @@ export 'src/components/pan_merchant_method.dart' show PANMerchantMethod, PANMerc
 export 'src/components/tip_indicator.dart' show TipIndicator, TipIndicatorUtils;
 
 export 'src/errors.dart';
+export 'src/extensions.dart';
 
 /// Creates an object that holds various information of a QRIS (QR Indonesian
 /// Standard) Code.
@@ -119,6 +120,13 @@ class QRIS
 
   /// Domestic Merchants, most common QRIS Codes are used by domestic merchants (ID "26" - "45")
   List<Merchant> get domesticMerchants => _getMerchantsByRange(26, 45,);
+
+  /// Default Domestic Merchant, usually located at ID "26"
+  late final Merchant? defaultDomesticMerchant = () {
+    final merchants = domesticMerchants;
+    return merchants.isNotEmpty ? merchants.first : null;
+  }();
+
   /// Additional Domestic Merchants information as reserve list, usually empty (ID "46" - "50")
   List<Merchant> get reservedDomesticMerchants => _getMerchantsByRange(46, 50,);
 
@@ -205,9 +213,18 @@ class QRIS
   /// The CRC Checksum of the QRIS Code contents as Hex String
   String? get crcHex => this[63];
 
+  @visibleForTesting
+  int? get calculatedCRC {
+    final hex = calculatedCRCHex;
+    if (hex != null) {
+      return int.parse(hex, radix: 16,);
+    }
+    return null;
+  }
+
   /// Recalculate CRC of this QRIS data
   @visibleForTesting
-  String? get calculatedCRC {
+  String? get calculatedCRCHex {
     final crc = crcHex;
     if (crc != null) {
       final raw = toString();
@@ -223,9 +240,14 @@ class QRIS
   }
 
   /// Check if the CRC assigned to this QRIS is correct
+  ///
+  /// Validation is based on CRC16 ISO/IEC 13239 where:
+  /// * Polynomial set as 0x1021
+  /// * Initial Input set as 0xFFFF
+  /// * Final XOR Mask set as 0x0000
   bool get isCRCValid {
     if (crcHex != null) {
-      return crcHex?.toUpperCase() == calculatedCRC?.toUpperCase();
+      return crcHex?.toUpperCase() == calculatedCRCHex?.toUpperCase();
     }
     return false;
   }

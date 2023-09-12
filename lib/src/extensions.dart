@@ -14,7 +14,7 @@ extension StringUtils on String {
     }
     final length = this.length;
     int sum = 0;
-    bool multiply = false;
+    bool multiply = true;
     StringBuffer? buffer;
     List<int>? dBuffer;
     if (verbose) {

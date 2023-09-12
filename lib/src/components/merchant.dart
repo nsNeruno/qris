@@ -40,11 +40,11 @@ class Merchant
   ///
   /// No checks performed on Merchant obtained on sub tag 51
   @override
-  bool get isValidCheckDigit {
+  bool isValidCheckDigit({bool useDeduction = false,}) {
     if (nationalMerchantId != null) {
       return true;
     }
-    return super.isValidCheckDigit;
+    return super.isValidCheckDigit(useDeduction: useDeduction,);
   }
 }
 

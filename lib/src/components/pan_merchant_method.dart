@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:qris/src/components/merchant.dart';
 import 'package:qris/src/extensions.dart';
 
@@ -117,15 +118,48 @@ mixin PANCodeMixin on MapBase<int, String> {
 
   /// Performs a Check Digits validation with mod 10 / Luhn Algorithm
   ///
-  /// Using serial of [panMerchantMethod] and [merchantSequence] as payload
-  bool get isValidCheckDigit {
-    final merchantSequence = this.merchantSequence;
-    final method = _panMerchantMethod;
-    final checkDigit = this.checkDigit;
-    if (method != null && merchantSequence != null && checkDigit != null) {
-      final mod = '$method$merchantSequence'.getMod10();
-      final calculatedCheckDigit = 10 - mod;
-      return calculatedCheckDigit == checkDigit;
+  /// Using serial of [panMerchantMethod] and [merchantSequence] as payload.
+  /// If [useDeduction] is true, apply the original `10 - (mod % 10)` result,
+  /// else compare the plain Mod 10 result with the Check Digit.
+  bool isValidCheckDigit({bool useDeduction = false,}) {
+    final mPan = this[1]?.toString();
+    if (mPan != null) {
+      final checkSequence = mPan.substring(0, mPan.length - 1,);
+      final mod = checkSequence.getMod10();
+      if (useDeduction) {
+        final calculatedCheckDigit = 10 - mod;
+        return calculatedCheckDigit == checkDigit;
+      }
+      return mod == checkDigit;
+    }
+    return false;
+  }
+
+  @visibleForTesting
+  bool isValidCheckDigitVerbose({bool useDeduction = false,}) {
+    final mPan = this[1]?.toString();
+    if (mPan != null) {
+      debugPrint('-----------------',);
+      debugPrint('mPAN: $mPan',);
+      final checkSequence = mPan.substring(0, mPan.length - 1,);
+      debugPrint('Check Digit: $checkDigit',);
+      debugPrint('Check Sequence: $checkSequence',);
+      final mod = checkSequence.getMod10(verbose: true,);
+      debugPrint('Mod 10 Result: $mod',);
+      if (useDeduction) {
+        final calculatedCheckDigit = 10 - mod;
+        debugPrint(
+          'Calculated Check Digit: 10 - $mod = $calculatedCheckDigit',
+        );
+        debugPrint('-----------------',);
+        return calculatedCheckDigit == checkDigit;
+      } else {
+        debugPrint(
+          'Calculated Check Digit: $mod',
+        );
+        debugPrint('-----------------',);
+        return mod == checkDigit;
+      }
     }
     return false;
   }

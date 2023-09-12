@@ -1,3 +1,10 @@
+## 0.6.4
+
+* Fixed Mod 10 logic for initial multiplier application during calculating the check digit
+* *\[BREAKING\]* Getter `isValidCheckDigit` replaced with function with the same name, accepting 
+a boolean flag `useDeduction`, defaults to `false` for QRIS specific requirement.
+* Updated Unit Tests
+
 ## 0.6.3
 
 * Exposed convenient access to `defaultDomesticMerchant`

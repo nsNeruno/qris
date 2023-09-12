@@ -12,14 +12,15 @@ void main() {
         'Basic Test',
         () {
           const samples = {
-            '123': 8,
-            '1234': 4,
-            '12345': 1,
-            '123456': 1,
-            '1234567': 1,
-            '12345678': 4,
-            '123456789': 7,
-            '1234567890': 3,
+            '123': 0,
+            '1234': 6,
+            '12345': 5,
+            '123456': 4,
+            '1234567': 6,
+            '12345678': 8,
+            '123456789': 3,
+            '1234567890': 7,
+            '93600867045678': 9,
           };
           samples.forEach(
             (key, value) {
@@ -49,21 +50,25 @@ void main() {
           // 1 * 2 * 1 * 2 * 1 * 2 * 1 * 2 * 1
           // 1 + 4 + 3 + 8 + 5 + 3 + 7 + 7 + 9
           // = 10 - (47 % 10) = 3
-          expect(test.getMod10(verbose: true,), checkDigit,);
+          expect(10 - test.getMod10(verbose: true,), checkDigit,);
         },
       );
       test(
         'Real QRIS Test',
         () {
-          const samples = <String>[
-            sample1,
-            sample2,
-            sample3,
-          ];
-          for (final data in samples) {
+          const samples = <String, bool>{
+            sample1: true,
+            sample2: false,
+            sample3: false,
+            sample4: false,
+            sample5: true,
+            sample6: false,
+          };
+          for (final entry in samples.entries) {
+            final data = entry.key;
             expect(
-              QRIS(data,).defaultDomesticMerchant!.isValidCheckDigit,
-              true,
+              QRIS(data,).defaultDomesticMerchant!.isValidCheckDigitVerbose(),
+              entry.value,
             );
           }
         },

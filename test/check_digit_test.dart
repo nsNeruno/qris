@@ -56,20 +56,33 @@ void main() {
       test(
         'Real QRIS Test',
         () {
-          const samples = <String, bool>{
+          final samples = <String, bool>{
             sample1: true,
             sample2: false,
             sample3: false,
             sample4: false,
             sample5: true,
             sample6: false,
-          };
-          for (final entry in samples.entries) {
+          }.entries;
+          for (int i = 0; i < samples.length; i++) {
+            final entry = samples.elementAt(i,);
             final data = entry.key;
+            final qris = QRIS(data,);
+            debugPrint('\nReal QRIS Test #${i + 1}',);
             expect(
-              QRIS(data,).defaultDomesticMerchant!.isValidCheckDigitVerbose(),
+              qris.defaultDomesticMerchant!.isValidCheckDigitVerbose(),
               entry.value,
             );
+            final merchant51 = qris.merchantAccountDomestic;
+            if (merchant51 != null) {
+              debugPrint('\nReal QRIS Test #${i + 1} (Tag 51)',);
+              expect(
+                merchant51.isValidCheckDigitVerbose(
+                  useDeduction: true,
+                ),
+                entry.value,
+              );
+            }
           }
         },
       );

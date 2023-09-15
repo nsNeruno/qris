@@ -134,6 +134,10 @@ class QRIS
   ///
   /// If [merchants] is empty, then most likely there's a single Merchant Account
   /// available at ID "51". (No merchant information between ID "02" to "45")
+  ///
+  /// It is possible that in a single QRIS, tag "51" co-exists together with
+  /// tag "26" or more. Please consult your Payment Provider regarding the
+  /// priority.
   late final Merchant? merchantAccountDomestic = this[51] != null
       ? Merchant(this[51]!)
       : null;

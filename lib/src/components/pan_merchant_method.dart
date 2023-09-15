@@ -122,7 +122,7 @@ mixin PANCodeMixin on MapBase<int, String> {
   /// If [useDeduction] is true, apply the original `10 - (mod % 10)` result,
   /// else compare the plain Mod 10 result with the Check Digit.
   bool isValidCheckDigit({bool useDeduction = false,}) {
-    final mPan = this[1]?.toString();
+    final mPan = panCode?.toString();
     if (mPan != null) {
       final checkSequence = mPan.substring(0, mPan.length - 1,);
       final mod = checkSequence.getMod10();
@@ -137,7 +137,7 @@ mixin PANCodeMixin on MapBase<int, String> {
 
   @visibleForTesting
   bool isValidCheckDigitVerbose({bool useDeduction = false,}) {
-    final mPan = this[1]?.toString();
+    final mPan = panCode?.toString();
     if (mPan != null) {
       debugPrint('-----------------',);
       debugPrint('mPAN: $mPan',);
@@ -151,14 +151,22 @@ mixin PANCodeMixin on MapBase<int, String> {
         debugPrint(
           'Calculated Check Digit: 10 - $mod = $calculatedCheckDigit',
         );
+        final result = calculatedCheckDigit == checkDigit;
+        debugPrint(
+          'Verdict: $calculatedCheckDigit == $checkDigit => $result',
+        );
         debugPrint('-----------------',);
-        return calculatedCheckDigit == checkDigit;
+        return result;
       } else {
         debugPrint(
           'Calculated Check Digit: $mod',
         );
+        final result = mod == checkDigit;
+        debugPrint(
+          'Verdict: $mod == $checkDigit => $result',
+        );
         debugPrint('-----------------',);
-        return mod == checkDigit;
+        return result;
       }
     }
     return false;

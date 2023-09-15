@@ -1,3 +1,9 @@
+## 0.6.5
+
+* Updated `Merchant` to properly process check digit and mPAN reading from tag 51
+* Updated Unit Tests
+* Note: Based on Unit Tests, it is recommended to perform check digit validation with deduction enabled for Merchants on Tag 51
+
 ## 0.6.4
 
 * Fixed Mod 10 logic for initial multiplier application during calculating the check digit

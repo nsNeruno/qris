@@ -1,12 +1,16 @@
 import 'package:flutter/widgets.dart' show StringCharacters;
+import 'package:qris/qris.dart';
 import 'package:qris/src/components/merchant_criteria.dart';
 import 'package:qris/src/components/pan_merchant_method.dart';
 import 'package:qris/src/decoder.dart';
 
 /// The information of a Merchant Account
 ///
-/// Plain merchants usually only have a single Merchant Account embedded in the
-/// QRIS code.
+/// A typical QRIS code could be consisting of one of these scenarios:
+/// * Single Merchant at Tag 26
+/// * Single Merchant at Tag 51
+/// * Double Merchant Information at both Tag 26 and 51
+///
 class Merchant
     extends DecodedQRISData
     with MerchantCriteriaMixin, PANCodeMixin {
@@ -21,12 +25,65 @@ class Merchant
   String? get globallyUniqueIdentifier => this[0];
 
   /// Merchant ID, with length up to 15 characters
+  ///
+  /// Typically processed only on tag 51, else ignored.
   String? get id => this[2];
+
+  /// See [PANCodeMixin.institutionCode]
+  ///
+  /// On Tag 51, returns default value *0000*
+  @override
+  String? get institutionCode {
+    if (super.panCode == null && nationalMerchantId != null) {
+      return '0000';
+    }
+    return super.institutionCode;
+  }
+
+  /// See [PANCodeMixin.panCode]
+  ///
+  /// If subtag `01` and subtag `02` exists at the same time, subtag `02` is
+  /// ignored, Merchant on non-51st tag typically might contains both subtags.
+  @override
+  String? get panCode {
+    // Reads default PAN Code from subtag 01 first
+    final originPanCode = super.panCode;
+    final nmId = nationalMerchantId;
+    // Only process NMID, if original PAN Code is missing
+    if (originPanCode == null && nmId != null) {
+      // Always use `360` for tag 51's currency
+      const defaultCurrency = '360';
+      final genYear = nmId.generatedYearLastTwoDigits ?? '';
+      if (genYear.isEmpty) {
+        throw QRISError(
+          'MalformedMerchant',
+          tag: 51,
+          data: nmId.toString(),
+          message: 'Invalid Generated Year "$genYear"',
+        );
+      }
+      final lastSegment = '$genYear${nmId.sequenceNumberAndCheckDigit ?? ''}';
+      if (lastSegment.length < 11) {
+        throw QRISError(
+          'MalformedMerchant',
+          tag: 51,
+          data: nmId.toString(),
+          message: 'Invalid NMID 11 Last Digits',
+        );
+      }
+      // mPAN Code formed from tag 51 uses this format
+      // [9][360][0000][11 digits consisting of the year, last sequence and check digit]
+      return '9$defaultCurrency$institutionCode$genYear$lastSegment';
+    }
+    return originPanCode;
+  }
 
   /// (Tag 51 only) Merchant ID, with length between 15-19 characters,
   /// including additional information
   ///
   /// Falls back to [id] return value on tags 26-45
+  ///
+  /// Typically returns null on Merchant that doesn't belong to tag 51.
   late final NationalMerchantIdentifier? nationalMerchantId = () {
     if (id != null) {
       try {
@@ -35,17 +92,6 @@ class Merchant
     }
     return null;
   }();
-
-  /// Checks the validity of mPAN sequence
-  ///
-  /// No checks performed on Merchant obtained on sub tag 51
-  @override
-  bool isValidCheckDigit({bool useDeduction = false,}) {
-    if (nationalMerchantId != null) {
-      return true;
-    }
-    return super.isValidCheckDigit(useDeduction: useDeduction,);
-  }
 }
 
 /// National Merchant Identifier contained within Entry ID 51 of the QRIS.

@@ -1,3 +1,9 @@
+## 0.6.6
+
+* Updated CRC Validation logic to perform numeric comparison right away instead of Hex String comparison
+* Removed `visibleForTesting` annotation for `calculatedCRC` and `calculatedCRCHex` getters
+* Updated Unit Tests
+
 ## 0.6.5
 
 * Updated `Merchant` to properly process check digit and mPAN reading from tag 51

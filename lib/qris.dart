@@ -217,7 +217,6 @@ class QRIS
   /// The CRC Checksum of the QRIS Code contents as Hex String
   String? get crcHex => this[63];
 
-  @visibleForTesting
   int? get calculatedCRC {
     final hex = calculatedCRCHex;
     if (hex != null) {
@@ -227,9 +226,8 @@ class QRIS
   }
 
   /// Recalculate CRC of this QRIS data
-  @visibleForTesting
   String? get calculatedCRCHex {
-    final crc = crcHex;
+    final crc = this.crc;
     if (crc != null) {
       final raw = toString();
       final match = RegExp(r'^.+63\d{2}',).firstMatch(raw,)?.group(0,);
@@ -250,8 +248,8 @@ class QRIS
   /// * Initial Input set as 0xFFFF
   /// * Final XOR Mask set as 0x0000
   bool get isCRCValid {
-    if (crcHex != null) {
-      return crcHex?.toUpperCase() == calculatedCRCHex?.toUpperCase();
+    if (crc != null) {
+      return crc == calculatedCRC;
     }
     return false;
   }

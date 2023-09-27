@@ -61,6 +61,7 @@ const sample3 = "000201"
     "62070703D01"
     "63045C1C";
 
+@visibleForTesting
 const sample4 = "000201"
     "010211"
     "2664"
@@ -82,6 +83,7 @@ const sample4 = "000201"
     "630421F0";
 
 // mPAN: 936008670456789" / valid check digit
+@visibleForTesting
 const sample5 = "000201"
     "010211"
     "2666"
@@ -102,6 +104,7 @@ const sample5 = "000201"
     "6304B1EF";
 
 // mPAN: 9360056701234567890" / invalid check digit
+@visibleForTesting
 const sample6 = "000201"
     "010211"
     "2670"
@@ -117,3 +120,24 @@ const sample6 = "000201"
     "61101234567890"
     "62070703K19"
     "6304D71A";
+
+@visibleForTesting
+const sample7 = "000201"
+    "010211"
+    "2667"
+    "0018ID.CO.EXAMPLE2.WWW"
+    "0115936000140456789"
+    "0215MIDCONTOH123456"
+    "0303UMI"
+    "5137"
+    "0014ID.CO.QRIS.WWW"
+    "0215ID1019123456781"
+    "52041234"
+    "5303360"
+    "540534000"
+    "5802ID"
+    "5914NamaMerchantC3"
+    "6009NamaKota1"
+    "61101234567890"
+    "62070703K19"
+    "63040855";

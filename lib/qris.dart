@@ -108,6 +108,7 @@ class QRIS
     growable: false,
   );
 
+  /// Get specific Merchant by Tag Number (only between 26 - 50)
   Merchant? getMerchantOnTag(int tag,) => _merchants[tag];
 
   List<Merchant> _getMerchantsByRange(int start, int end,) {

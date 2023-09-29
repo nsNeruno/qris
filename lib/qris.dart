@@ -15,6 +15,7 @@ import 'package:qris/src/components/merchant.dart';
 import 'package:qris/src/components/tip_indicator.dart';
 import 'package:qris/src/decoder.dart';
 
+export 'src/components/merchant.dart';
 export 'src/components/initiation_point.dart' show InitiationPoint, InitiationPointUtils;
 export 'src/components/merchant_criteria.dart' show MerchantCriteria, MerchantCriteriaUtils;
 export 'src/components/pan_merchant_method.dart' show PANMerchantMethod, PANMerchantMethodUtils;
@@ -106,6 +107,8 @@ class QRIS
   List<Merchant> get merchants => _merchants.values.toList(
     growable: false,
   );
+
+  Merchant? getMerchantOnTag(int tag,) => _merchants[tag];
 
   List<Merchant> _getMerchantsByRange(int start, int end,) {
     final merchants = <Merchant>[];

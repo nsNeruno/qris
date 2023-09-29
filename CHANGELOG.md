@@ -1,3 +1,8 @@
+## 0.7.0
+
+* Exported `Merchant` class and other classes on same file
+* Added `getMerchantOnTag` method
+
 ## 0.6.6
 
 * Updated CRC Validation logic to perform numeric comparison right away instead of Hex String comparison

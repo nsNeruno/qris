@@ -97,7 +97,7 @@ class QRIS
     for (int i = 26; i <= 50; i++) {
       final data = this[i];
       if (data != null) {
-        merchants[i] = Merchant(data,);
+        merchants[i] = Merchant(i, data,);
       }
     }
     return merchants;
@@ -143,7 +143,7 @@ class QRIS
   /// tag "26" or more. Please consult your Payment Provider regarding the
   /// priority.
   late final Merchant? merchantAccountDomestic = this[51] != null
-      ? Merchant(this[51]!)
+      ? Merchant(51, this[51]!,)
       : null;
 
   /// Merchant Category Code (MCC in short)

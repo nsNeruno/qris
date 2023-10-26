@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart' show StringCharacters;
+import 'package:flutter/widgets.dart' show StringCharacters, visibleForTesting;
 import 'package:qris/qris.dart';
 import 'package:qris/src/components/merchant_criteria.dart';
 import 'package:qris/src/components/pan_merchant_method.dart';
@@ -16,7 +16,7 @@ class Merchant
     with MerchantCriteriaMixin, PANCodeMixin {
 
   /// Creates Merchant instance from a QRIS subtag information
-  Merchant(String data,): super(data);
+  Merchant(this.tag, String data,): super(data);
 
   /// Merchant identifier in the form of reverse domain name. Usually presented
   /// in UPPER-CASED.
@@ -92,6 +92,44 @@ class Merchant
     }
     return null;
   }();
+
+  /// See [PANCodeMixin.checkDigit]
+  ///
+  /// Except for tag 51, performs a Mod 10 Algorithm calculation instead
+  @override
+  int? get checkDigit {
+    if (tag < 51) {
+      final panCode = this.panCode;
+      if (panCode != null) {
+        return 10 - panCode.getMod10();
+      }
+    }
+    return super.checkDigit;
+  }
+
+  /// See [PANCodeMixin.isValidCheckDigit]
+  ///
+  /// Except for tag 51, no validation performed because the check digit is
+  /// non-existent
+  @override
+  bool isValidCheckDigit({bool useDeduction = false}) {
+    if (tag < 51) {
+      return true;
+    }
+    return super.isValidCheckDigit(useDeduction: useDeduction,);
+  }
+
+  @visibleForTesting
+  @override
+  bool isValidCheckDigitVerbose({bool useDeduction = false}) {
+    if (tag < 51) {
+      return true;
+    }
+    // ignore: invalid_use_of_visible_for_testing_member
+    return super.isValidCheckDigitVerbose(useDeduction: useDeduction,);
+  }
+
+  final int tag;
 }
 
 /// National Merchant Identifier contained within Entry ID 51 of the QRIS.

@@ -9,6 +9,36 @@ void main() {
     'Mod 10 Group Test',
     () {
       test(
+        'Check Digit Compare',
+        () {
+          const data = '000201'
+              '010211'
+              '2667'
+              '0018ID.CO.EXAMPLE2.WWW'
+              '0115936000140456789'
+              '0215MIDCONTOH123456'
+              '0303UMI'
+              '5137'
+              '0014ID.CO.QRIS.WWW'
+              '0215ID1019123456781'
+              '52041234'
+              '5303360'
+              '5802ID'
+              '5914NamaMerchantC1'
+              '6009NamaKota1'
+              '61101234567890'
+              '62070703K19'
+              '6304B22E';
+          final qris = QRIS(data,);
+          final m26 = qris.defaultDomesticMerchant!;
+          final panCode = m26.panCode!;
+          debugPrint('PAN Code: $panCode',);
+          expect(panCode, '936000140456789',);
+          final checkDigit = m26.checkDigit!;
+          expect(checkDigit, 6,);
+        },
+      );
+      test(
         'Basic Test',
         () {
           const samples = {
@@ -21,6 +51,7 @@ void main() {
             '123456789': 3,
             '1234567890': 7,
             '93600867045678': 9,
+            '936000140456789': 4,
           };
           samples.forEach(
             (key, value) {
@@ -61,7 +92,7 @@ void main() {
             sample2: false,
             sample3: false,
             sample4: false,
-            sample5: true,
+            sample5: false,
             sample6: false,
           }.entries;
           for (int i = 0; i < samples.length; i++) {

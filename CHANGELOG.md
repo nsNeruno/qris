@@ -1,3 +1,8 @@
+## 0.7.1
+
+* Adjusted `checkDigit` getter logic under `Merchant` to behave differently under specific tags
+* Updated Unit Tests
+
 ## 0.7.0
 
 * Exported `Merchant` class and other classes on same file

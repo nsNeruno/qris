@@ -3,7 +3,12 @@ import 'package:flutter/foundation.dart';
 extension StringUtils on String {
 
   int getMod10({bool verbose = false,}) {
-    return getMod10Sum(verbose: verbose,) % 10;
+    final modSum = getMod10Sum(verbose: verbose,);
+    final result = modSum % 10;
+    if (verbose) {
+      debugPrint('getMod10: $modSum % 10 = $result',);
+    }
+    return result;
   }
 
   int getMod10Sum({bool verbose = false,}) {
